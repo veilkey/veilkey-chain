@@ -10,16 +10,22 @@ import (
 type TxType string
 
 const (
-	TxSaveTokenRef        TxType = "SaveTokenRef"
-	TxUpdateTokenRef      TxType = "UpdateTokenRef"
-	TxDeleteTokenRef      TxType = "DeleteTokenRef"
-	TxUpsertAgent         TxType = "UpsertAgent"
-	TxRegisterChild       TxType = "RegisterChild"
-	TxIncrementRefVersion TxType = "IncrementRefVersion"
-	TxSaveBinding         TxType = "SaveBinding"
-	TxDeleteBinding       TxType = "DeleteBinding"
-	TxSetConfig           TxType = "SetConfig"
-	TxRecordAuditEvent    TxType = "RecordAuditEvent"
+	TxSaveTokenRef          TxType = "SaveTokenRef"
+	TxUpdateTokenRef        TxType = "UpdateTokenRef"
+	TxDeleteTokenRef        TxType = "DeleteTokenRef"
+	TxUpsertAgent           TxType = "UpsertAgent"
+	TxDeleteAgent           TxType = "DeleteAgent"
+	TxRegisterChild         TxType = "RegisterChild"
+	TxDeleteChild           TxType = "DeleteChild"
+	TxUpdateChildURL        TxType = "UpdateChildURL"
+	TxIncrementRefVersion   TxType = "IncrementRefVersion"
+	TxSaveBinding           TxType = "SaveBinding"
+	TxDeleteBinding         TxType = "DeleteBinding"
+	TxDeleteBindingsByTarget TxType = "DeleteBindingsByTarget"
+	TxSaveGlobalFunction    TxType = "SaveGlobalFunction"
+	TxDeleteGlobalFunction  TxType = "DeleteGlobalFunction"
+	TxSetConfig             TxType = "SetConfig"
+	TxRecordAuditEvent      TxType = "RecordAuditEvent"
 )
 
 type TxEnvelope struct {
@@ -133,6 +139,41 @@ type SetConfigPayload struct {
 	Value  string         `json:"value"`
 	Scope  refs.RefScope  `json:"scope"`
 	Status refs.RefStatus `json:"status"`
+}
+
+// DeleteAgentPayload carries the data for a DeleteAgent transaction.
+type DeleteAgentPayload struct {
+	NodeID string `json:"node_id"`
+}
+
+// DeleteChildPayload carries the data for a DeleteChild transaction.
+type DeleteChildPayload struct {
+	NodeID string `json:"node_id"`
+}
+
+// UpdateChildURLPayload carries the data for an UpdateChildURL transaction.
+type UpdateChildURLPayload struct {
+	NodeID string `json:"node_id"`
+	URL    string `json:"url"`
+}
+
+// DeleteBindingsByTargetPayload carries the data for a DeleteBindingsByTarget transaction.
+type DeleteBindingsByTargetPayload struct {
+	BindingType string `json:"binding_type"`
+	TargetName  string `json:"target_name"`
+}
+
+// SaveGlobalFunctionPayload carries the data for a SaveGlobalFunction transaction.
+type SaveGlobalFunctionPayload struct {
+	Name        string `json:"name"`
+	Description string `json:"description,omitempty"`
+	Body        string `json:"body"`
+	Language    string `json:"language,omitempty"`
+}
+
+// DeleteGlobalFunctionPayload carries the data for a DeleteGlobalFunction transaction.
+type DeleteGlobalFunctionPayload struct {
+	Name string `json:"name"`
 }
 
 // RecordAuditEventPayload carries the data for a RecordAuditEvent transaction.

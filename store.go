@@ -17,11 +17,19 @@ type Store interface {
 
 	// Agent operations
 	UpsertAgent(nodeID, label, vaultHash, vaultName, ip string, port, secretsCount, configsCount, version, keyVersion int) error
+	DeleteAgent(nodeID string) error
 	RegisterChild(child *ChildRecord) error
+	DeleteChild(nodeID string) error
+	UpdateChildURL(nodeID, url string) error
 
 	// Binding operations
 	SaveBinding(binding *BindingRecord) error
 	DeleteBinding(bindingID string) error
+	DeleteBindingsByTarget(bindingType, targetName string) error
+
+	// Global function operations
+	SaveGlobalFunction(fn *GlobalFunctionRecord) error
+	DeleteGlobalFunction(name string) error
 
 	// Config operations
 	SaveConfig(key, value string) error
@@ -63,6 +71,14 @@ type BindingRecord struct {
 	FieldKey     string
 	RefCanonical string
 	Required     bool
+}
+
+// GlobalFunctionRecord holds global function data for chain TX.
+type GlobalFunctionRecord struct {
+	Name        string
+	Description string
+	Body        string
+	Language    string
 }
 
 // AuditRecord holds audit event data.

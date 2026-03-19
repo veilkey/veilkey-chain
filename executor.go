@@ -130,6 +130,16 @@ func executeTx(d Store, env *TxEnvelope) (uint32, string, string, string) {
 		}
 		return 0, p.NodeID, "agent", p.NodeID
 
+	case TxDeleteAgent:
+		p, err := DecodePayload[DeleteAgentPayload](env)
+		if err != nil {
+			return 2, fmt.Sprintf("decode DeleteAgent: %v", err), "", ""
+		}
+		if err := d.DeleteAgent(p.NodeID); err != nil {
+			return 3, fmt.Sprintf("db DeleteAgent: %v", err), "", ""
+		}
+		return 0, p.NodeID, "agent", p.NodeID
+
 	case TxRegisterChild:
 		p, err := DecodePayload[RegisterChildPayload](env)
 		if err != nil {
@@ -143,6 +153,26 @@ func executeTx(d Store, env *TxEnvelope) (uint32, string, string, string) {
 		}
 		if err := d.RegisterChild(child); err != nil {
 			return 3, fmt.Sprintf("db RegisterChild: %v", err), "", ""
+		}
+		return 0, p.NodeID, "child", p.NodeID
+
+	case TxDeleteChild:
+		p, err := DecodePayload[DeleteChildPayload](env)
+		if err != nil {
+			return 2, fmt.Sprintf("decode DeleteChild: %v", err), "", ""
+		}
+		if err := d.DeleteChild(p.NodeID); err != nil {
+			return 3, fmt.Sprintf("db DeleteChild: %v", err), "", ""
+		}
+		return 0, p.NodeID, "child", p.NodeID
+
+	case TxUpdateChildURL:
+		p, err := DecodePayload[UpdateChildURLPayload](env)
+		if err != nil {
+			return 2, fmt.Sprintf("decode UpdateChildURL: %v", err), "", ""
+		}
+		if err := d.UpdateChildURL(p.NodeID, p.URL); err != nil {
+			return 3, fmt.Sprintf("db UpdateChildURL: %v", err), "", ""
 		}
 		return 0, p.NodeID, "child", p.NodeID
 
@@ -193,6 +223,44 @@ func executeTx(d Store, env *TxEnvelope) (uint32, string, string, string) {
 			return 3, fmt.Sprintf("db DeleteBinding: %v", err), "", ""
 		}
 		return 0, p.BindingID, "binding", p.BindingID
+
+	case TxDeleteBindingsByTarget:
+		p, err := DecodePayload[DeleteBindingsByTargetPayload](env)
+		if err != nil {
+			return 2, fmt.Sprintf("decode DeleteBindingsByTarget: %v", err), "", ""
+		}
+		if err := d.DeleteBindingsByTarget(p.BindingType, p.TargetName); err != nil {
+			return 3, fmt.Sprintf("db DeleteBindingsByTarget: %v", err), "", ""
+		}
+		entityID := p.BindingType + ":" + p.TargetName
+		return 0, entityID, "binding", entityID
+
+	// ── Global function operations ──────────────────────────────────────
+
+	case TxSaveGlobalFunction:
+		p, err := DecodePayload[SaveGlobalFunctionPayload](env)
+		if err != nil {
+			return 2, fmt.Sprintf("decode SaveGlobalFunction: %v", err), "", ""
+		}
+		if err := d.SaveGlobalFunction(&GlobalFunctionRecord{
+			Name:        p.Name,
+			Description: p.Description,
+			Body:        p.Body,
+			Language:    p.Language,
+		}); err != nil {
+			return 3, fmt.Sprintf("db SaveGlobalFunction: %v", err), "", ""
+		}
+		return 0, p.Name, "global_function", p.Name
+
+	case TxDeleteGlobalFunction:
+		p, err := DecodePayload[DeleteGlobalFunctionPayload](env)
+		if err != nil {
+			return 2, fmt.Sprintf("decode DeleteGlobalFunction: %v", err), "", ""
+		}
+		if err := d.DeleteGlobalFunction(p.Name); err != nil {
+			return 3, fmt.Sprintf("db DeleteGlobalFunction: %v", err), "", ""
+		}
+		return 0, p.Name, "global_function", p.Name
 
 	// ── Audit operations (explicit metadata) ────────────────────────────
 
