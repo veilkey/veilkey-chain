@@ -243,10 +243,11 @@ func executeTx(d Store, env *TxEnvelope) (uint32, string, string, string) {
 			return 2, fmt.Sprintf("decode SaveGlobalFunction: %v", err), "", ""
 		}
 		if err := d.SaveGlobalFunction(&GlobalFunctionRecord{
-			Name:        p.Name,
-			Description: p.Description,
-			Body:        p.Body,
-			Language:    p.Language,
+			Name:         p.Name,
+			FunctionHash: p.FunctionHash,
+			Category:     p.Category,
+			Command:      p.Command,
+			VarsJSON:     p.VarsJSON,
 		}); err != nil {
 			return 3, fmt.Sprintf("db SaveGlobalFunction: %v", err), "", ""
 		}

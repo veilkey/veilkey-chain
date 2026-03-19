@@ -75,10 +75,11 @@ type BindingRecord struct {
 
 // GlobalFunctionRecord holds global function data for chain TX.
 type GlobalFunctionRecord struct {
-	Name        string
-	Description string
-	Body        string
-	Language    string
+	Name         string
+	FunctionHash string
+	Category     string
+	Command      string
+	VarsJSON     string
 }
 
 // AuditRecord holds audit event data.

@@ -165,10 +165,11 @@ type DeleteBindingsByTargetPayload struct {
 
 // SaveGlobalFunctionPayload carries the data for a SaveGlobalFunction transaction.
 type SaveGlobalFunctionPayload struct {
-	Name        string `json:"name"`
-	Description string `json:"description,omitempty"`
-	Body        string `json:"body"`
-	Language    string `json:"language,omitempty"`
+	Name         string `json:"name"`
+	FunctionHash string `json:"function_hash"`
+	Category     string `json:"category,omitempty"`
+	Command      string `json:"command"`
+	VarsJSON     string `json:"vars_json,omitempty"`
 }
 
 // DeleteGlobalFunctionPayload carries the data for a DeleteGlobalFunction transaction.
