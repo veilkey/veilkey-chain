@@ -170,7 +170,18 @@ func executeTx(d Store, env *TxEnvelope) (uint32, string, string, string) {
 				return 4, fmt.Sprintf("validate SaveBinding ref: %v", parseErr), "", ""
 			}
 		}
-		// TODO: implement d.SaveBinding() when binding DB methods are refactored
+		if err := d.SaveBinding(&BindingRecord{
+			BindingID:    p.BindingID,
+			BindingType:  p.BindingType,
+			TargetName:   p.TargetName,
+			VaultHash:    p.VaultHash,
+			SecretName:   p.SecretName,
+			FieldKey:     p.FieldKey,
+			RefCanonical: p.RefCanonical,
+			Required:     p.Required,
+		}); err != nil {
+			return 3, fmt.Sprintf("db SaveBinding: %v", err), "", ""
+		}
 		return 0, p.BindingID, "binding", p.BindingID
 
 	case TxDeleteBinding:
@@ -178,7 +189,9 @@ func executeTx(d Store, env *TxEnvelope) (uint32, string, string, string) {
 		if err != nil {
 			return 2, fmt.Sprintf("decode DeleteBinding: %v", err), "", ""
 		}
-		// TODO: implement d.DeleteBinding() when binding DB methods are refactored
+		if err := d.DeleteBinding(p.BindingID); err != nil {
+			return 3, fmt.Sprintf("db DeleteBinding: %v", err), "", ""
+		}
 		return 0, p.BindingID, "binding", p.BindingID
 
 	// ── Audit operations (explicit metadata) ────────────────────────────

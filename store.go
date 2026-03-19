@@ -19,6 +19,10 @@ type Store interface {
 	UpsertAgent(nodeID, label, vaultHash, vaultName, ip string, port, secretsCount, configsCount, version, keyVersion int) error
 	RegisterChild(child *ChildRecord) error
 
+	// Binding operations
+	SaveBinding(binding *BindingRecord) error
+	DeleteBinding(bindingID string) error
+
 	// Config operations
 	SaveConfig(key, value string) error
 
@@ -47,6 +51,18 @@ type ChildRecord struct {
 	Label   string
 	URL     string
 	Version int
+}
+
+// BindingRecord holds binding data for chain TX.
+type BindingRecord struct {
+	BindingID    string
+	BindingType  string
+	TargetName   string
+	VaultHash    string
+	SecretName   string
+	FieldKey     string
+	RefCanonical string
+	Required     bool
 }
 
 // AuditRecord holds audit event data.
