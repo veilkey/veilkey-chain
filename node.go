@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	cfg "github.com/cometbft/cometbft/config"
 	cmtflags "github.com/cometbft/cometbft/libs/cli/flags"
@@ -86,6 +87,17 @@ func defaultCometConfig(chainHome string) *cfg.Config {
 
 	// P2P: allow external connections for future multi-node
 	config.P2P.ListenAddress = DefaultP2PListen
+
+	// Persistent peers from env (for full nodes connecting to validator)
+	if peers := os.Getenv("VEILKEY_CHAIN_PERSISTENT_PEERS"); peers != "" {
+		config.P2P.PersistentPeers = peers
+	} else {
+		// Try reading from file (written by genesis fetch)
+		peersFile := filepath.Join(chainHome, "config", "persistent_peers.txt")
+		if data, err := os.ReadFile(peersFile); err == nil {
+			config.P2P.PersistentPeers = strings.TrimSpace(string(data))
+		}
+	}
 
 	// Minimal logging
 	config.LogLevel = DefaultLogLevel
