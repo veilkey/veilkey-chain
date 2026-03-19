@@ -130,6 +130,44 @@ func executeTx(d Store, env *TxEnvelope) (uint32, string, string, string) {
 		}
 		return 0, p.NodeID, "agent", p.NodeID
 
+	case TxUpdateAgentState:
+		p, err := DecodePayload[UpdateAgentStatePayload](env)
+		if err != nil {
+			return 2, fmt.Sprintf("decode UpdateAgentState: %v", err), "", ""
+		}
+		update := &AgentStateUpdate{}
+		update.RotationRequired = p.RotationRequired
+		update.RotationReason = p.RotationReason
+		update.RebindRequired = p.RebindRequired
+		update.RebindReason = p.RebindReason
+		update.RetryStage = p.RetryStage
+		update.BlockReason = p.BlockReason
+		update.KeyVersion = p.KeyVersion
+		if p.NextRetryAt != nil {
+			update.SetNextRetryAt = true
+			if *p.NextRetryAt != "" {
+				t, err := time.Parse(time.RFC3339, *p.NextRetryAt)
+				if err != nil {
+					return 4, fmt.Sprintf("validate UpdateAgentState next_retry_at: %v", err), "", ""
+				}
+				update.NextRetryAt = &t
+			}
+		}
+		if p.BlockedAt != nil {
+			update.SetBlockedAt = true
+			if *p.BlockedAt != "" {
+				t, err := time.Parse(time.RFC3339, *p.BlockedAt)
+				if err != nil {
+					return 4, fmt.Sprintf("validate UpdateAgentState blocked_at: %v", err), "", ""
+				}
+				update.BlockedAt = &t
+			}
+		}
+		if err := d.UpdateAgentState(p.NodeID, update); err != nil {
+			return 3, fmt.Sprintf("db UpdateAgentState: %v", err), "", ""
+		}
+		return 0, p.NodeID, "agent", p.NodeID
+
 	case TxDeleteAgent:
 		p, err := DecodePayload[DeleteAgentPayload](env)
 		if err != nil {

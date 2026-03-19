@@ -18,6 +18,7 @@ type Store interface {
 	// Agent operations
 	UpsertAgent(nodeID, label, vaultHash, vaultName, ip string, port, secretsCount, configsCount, version, keyVersion int) error
 	DeleteAgent(nodeID string) error
+	UpdateAgentState(nodeID string, updates *AgentStateUpdate) error
 	RegisterChild(child *ChildRecord) error
 	DeleteChild(nodeID string) error
 	UpdateChildURL(nodeID, url string) error
@@ -75,6 +76,22 @@ type BindingRecord struct {
 	FieldKey     string
 	RefCanonical string
 	Required     bool
+}
+
+// AgentStateUpdate carries partial agent state updates.
+// Pointer fields: nil = no change, non-nil = set to value.
+type AgentStateUpdate struct {
+	RotationRequired *bool
+	RotationReason   *string
+	RebindRequired   *bool
+	RebindReason     *string
+	RetryStage       *int
+	NextRetryAt      *time.Time // nil = clear
+	SetNextRetryAt   bool       // true = apply NextRetryAt (even if nil = clear)
+	BlockedAt        *time.Time // nil = clear
+	SetBlockedAt     bool       // true = apply BlockedAt (even if nil = clear)
+	BlockReason      *string
+	KeyVersion       *int
 }
 
 // GlobalFunctionRecord holds global function data for chain TX.

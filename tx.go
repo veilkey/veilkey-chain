@@ -15,6 +15,7 @@ const (
 	TxDeleteTokenRef        TxType = "DeleteTokenRef"
 	TxUpsertAgent           TxType = "UpsertAgent"
 	TxDeleteAgent           TxType = "DeleteAgent"
+	TxUpdateAgentState      TxType = "UpdateAgentState"
 	TxRegisterChild         TxType = "RegisterChild"
 	TxDeleteChild           TxType = "DeleteChild"
 	TxUpdateChildURL        TxType = "UpdateChildURL"
@@ -146,6 +147,22 @@ type SetConfigPayload struct {
 // DeleteAgentPayload carries the data for a DeleteAgent transaction.
 type DeleteAgentPayload struct {
 	NodeID string `json:"node_id"`
+}
+
+// UpdateAgentStatePayload carries the data for an UpdateAgentState transaction.
+// Pointer fields mean "set to this value"; nil means "don't change".
+// To clear a *time.Time field, set ClearBlockedAt/ClearNextRetryAt to true.
+type UpdateAgentStatePayload struct {
+	NodeID           string  `json:"node_id"`
+	RotationRequired *bool   `json:"rotation_required,omitempty"`
+	RotationReason   *string `json:"rotation_reason,omitempty"`
+	RebindRequired   *bool   `json:"rebind_required,omitempty"`
+	RebindReason     *string `json:"rebind_reason,omitempty"`
+	RetryStage       *int    `json:"retry_stage,omitempty"`
+	NextRetryAt      *string `json:"next_retry_at,omitempty"`      // RFC3339 or empty to clear
+	BlockedAt        *string `json:"blocked_at,omitempty"`         // RFC3339 or empty to clear
+	BlockReason      *string `json:"block_reason,omitempty"`
+	KeyVersion       *int    `json:"key_version,omitempty"`
 }
 
 // DeleteChildPayload carries the data for a DeleteChild transaction.
