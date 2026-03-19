@@ -82,11 +82,19 @@ func defaultCometConfig(chainHome string) *cfg.Config {
 	config.Consensus.TimeoutCommit = cfg.DefaultConsensusConfig().TimeoutCommit
 	config.Consensus.CreateEmptyBlocks = false
 
-	// RPC on localhost only
-	config.RPC.ListenAddress = DefaultRPCListen
+	// RPC on localhost only — configurable via env for multi-node on same host
+	if rpc := os.Getenv("VEILKEY_CHAIN_RPC_LISTEN"); rpc != "" {
+		config.RPC.ListenAddress = rpc
+	} else {
+		config.RPC.ListenAddress = DefaultRPCListen
+	}
 
-	// P2P: allow external connections for future multi-node
-	config.P2P.ListenAddress = DefaultP2PListen
+	// P2P — configurable via env
+	if p2p := os.Getenv("VEILKEY_CHAIN_P2P_LISTEN"); p2p != "" {
+		config.P2P.ListenAddress = p2p
+	} else {
+		config.P2P.ListenAddress = DefaultP2PListen
+	}
 
 	// Persistent peers from env (for full nodes connecting to validator)
 	if peers := os.Getenv("VEILKEY_CHAIN_PERSISTENT_PEERS"); peers != "" {
