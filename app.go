@@ -6,6 +6,7 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
+	"log"
 	"strconv"
 
 	abcitypes "github.com/cometbft/cometbft/abci/types"
@@ -86,8 +87,12 @@ func (app *Application) FinalizeBlock(_ context.Context, req *abcitypes.RequestF
 }
 
 func (app *Application) Commit(_ context.Context, _ *abcitypes.RequestCommit) (*abcitypes.ResponseCommit, error) {
-	_ = app.config.SaveConfig(ConfigKeyChainHeight, fmt.Sprintf("%d", app.appHeight))
-	_ = app.config.SaveConfig(ConfigKeyChainHash, hex.EncodeToString(app.appHash))
+	if err := app.config.SaveConfig(ConfigKeyChainHeight, fmt.Sprintf("%d", app.appHeight)); err != nil {
+		log.Printf("chain: failed to persist height %d: %v", app.appHeight, err)
+	}
+	if err := app.config.SaveConfig(ConfigKeyChainHash, hex.EncodeToString(app.appHash)); err != nil {
+		log.Printf("chain: failed to persist app hash: %v", err)
+	}
 	return &abcitypes.ResponseCommit{}, nil
 }
 

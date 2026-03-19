@@ -69,6 +69,9 @@ type DeleteTokenRefPayload struct {
 }
 
 // UpsertAgentPayload carries the data for an UpsertAgent transaction.
+// SECURITY: DEK/DEKNonce are intentionally excluded — encrypted key material
+// must never appear in chain blocks (visible to all nodes).
+// DEK updates use direct DB writes outside the chain path.
 type UpsertAgentPayload struct {
 	NodeID           string `json:"node_id"`
 	Label            string `json:"label"`
@@ -86,21 +89,19 @@ type UpsertAgentPayload struct {
 	RebindReason     string `json:"rebind_reason,omitempty"`
 	IP               string `json:"ip,omitempty"`
 	Port             int    `json:"port,omitempty"`
-	DEK              []byte `json:"dek,omitempty"`
-	DEKNonce         []byte `json:"dek_nonce,omitempty"`
 	SecretsCount     int    `json:"secrets_count"`
 	ConfigsCount     int    `json:"configs_count"`
 	Version          int    `json:"version"`
 }
 
 // RegisterChildPayload carries the data for a RegisterChild transaction.
+// SECURITY: EncryptedDEK/Nonce are intentionally excluded — key material
+// must never appear in chain blocks. DEK delivery uses direct REST + DB.
 type RegisterChildPayload struct {
-	NodeID       string `json:"node_id"`
-	Label        string `json:"label"`
-	URL          string `json:"url"`
-	EncryptedDEK []byte `json:"encrypted_dek"`
-	Nonce        []byte `json:"nonce"`
-	Version      int    `json:"version"`
+	NodeID  string `json:"node_id"`
+	Label   string `json:"label"`
+	URL     string `json:"url"`
+	Version int    `json:"version"`
 }
 
 // IncrementRefVersionPayload carries the data for an IncrementRefVersion transaction.

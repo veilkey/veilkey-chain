@@ -136,12 +136,10 @@ func executeTx(d Store, env *TxEnvelope) (uint32, string, string, string) {
 			return 2, fmt.Sprintf("decode RegisterChild: %v", err), "", ""
 		}
 		child := &ChildRecord{
-			NodeID:       p.NodeID,
-			Label:        p.Label,
-			URL:          p.URL,
-			EncryptedDEK: p.EncryptedDEK,
-			Nonce:        p.Nonce,
-			Version:      p.Version,
+			NodeID:  p.NodeID,
+			Label:   p.Label,
+			URL:     p.URL,
+			Version: p.Version,
 		}
 		if err := d.RegisterChild(child); err != nil {
 			return 3, fmt.Sprintf("db RegisterChild: %v", err), "", ""

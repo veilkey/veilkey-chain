@@ -40,14 +40,13 @@ type RefParts struct {
 	ID     string
 }
 
-// ChildRecord holds child node registration data.
+// ChildRecord holds child node registration data for chain TX.
+// SECURITY: DEK fields excluded — key material never goes on chain.
 type ChildRecord struct {
-	NodeID       string
-	Label        string
-	URL          string
-	EncryptedDEK []byte
-	Nonce        []byte
-	Version      int
+	NodeID  string
+	Label   string
+	URL     string
+	Version int
 }
 
 // AuditRecord holds audit event data.
