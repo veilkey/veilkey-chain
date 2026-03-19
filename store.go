@@ -33,6 +33,10 @@ type Store interface {
 
 	// Config operations
 	SaveConfig(key, value string) error
+	DeleteConfig(key string) error
+
+	// Node topology
+	SetParentURL(parentURL string) error
 
 	// Audit operations
 	SaveAuditEvent(event *AuditRecord) error

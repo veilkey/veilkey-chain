@@ -188,6 +188,26 @@ func executeTx(d Store, env *TxEnvelope) (uint32, string, string, string) {
 		}
 		return 0, p.Key, "config", p.Key
 
+	case TxDeleteConfig:
+		p, err := DecodePayload[DeleteConfigPayload](env)
+		if err != nil {
+			return 2, fmt.Sprintf("decode DeleteConfig: %v", err), "", ""
+		}
+		if err := d.DeleteConfig(p.Key); err != nil {
+			return 3, fmt.Sprintf("db DeleteConfig: %v", err), "", ""
+		}
+		return 0, p.Key, "config", p.Key
+
+	case TxSetParentURL:
+		p, err := DecodePayload[SetParentURLPayload](env)
+		if err != nil {
+			return 2, fmt.Sprintf("decode SetParentURL: %v", err), "", ""
+		}
+		if err := d.SetParentURL(p.ParentURL); err != nil {
+			return 3, fmt.Sprintf("db SetParentURL: %v", err), "", ""
+		}
+		return 0, p.ParentURL, "node_info", "parent_url"
+
 	// ── Binding operations ──────────────────────────────────────────────
 
 	case TxSaveBinding:

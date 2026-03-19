@@ -25,6 +25,8 @@ const (
 	TxSaveGlobalFunction    TxType = "SaveGlobalFunction"
 	TxDeleteGlobalFunction  TxType = "DeleteGlobalFunction"
 	TxSetConfig             TxType = "SetConfig"
+	TxDeleteConfig          TxType = "DeleteConfig"
+	TxSetParentURL          TxType = "SetParentURL"
 	TxRecordAuditEvent      TxType = "RecordAuditEvent"
 )
 
@@ -175,6 +177,16 @@ type SaveGlobalFunctionPayload struct {
 // DeleteGlobalFunctionPayload carries the data for a DeleteGlobalFunction transaction.
 type DeleteGlobalFunctionPayload struct {
 	Name string `json:"name"`
+}
+
+// DeleteConfigPayload carries the data for a DeleteConfig transaction.
+type DeleteConfigPayload struct {
+	Key string `json:"key"`
+}
+
+// SetParentURLPayload carries the data for a SetParentURL transaction.
+type SetParentURLPayload struct {
+	ParentURL string `json:"parent_url"`
 }
 
 // RecordAuditEventPayload carries the data for a RecordAuditEvent transaction.
