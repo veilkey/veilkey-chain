@@ -124,7 +124,7 @@ func executeTx(d Store, env *TxEnvelope) (uint32, string, string, string) {
 		if err := d.UpsertAgent(
 			p.NodeID, p.Label, p.VaultHash, p.VaultName,
 			p.IP, p.Port, p.SecretsCount, p.ConfigsCount,
-			p.Version, p.KeyVersion,
+			p.Version, p.KeyVersion, p.Salt,
 		); err != nil {
 			return 3, fmt.Sprintf("db UpsertAgent: %v", err), "", ""
 		}

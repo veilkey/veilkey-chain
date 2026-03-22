@@ -101,6 +101,7 @@ type UpsertAgentPayload struct {
 	SecretsCount     int    `json:"secrets_count"`
 	ConfigsCount     int    `json:"configs_count"`
 	Version          int    `json:"version"`
+	Salt             string `json:"salt,omitempty"`
 }
 
 // RegisterChildPayload carries the data for a RegisterChild transaction.

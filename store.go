@@ -16,7 +16,7 @@ type Store interface {
 	DeleteRef(canonical string) error
 
 	// Agent operations
-	UpsertAgent(nodeID, label, vaultHash, vaultName, ip string, port, secretsCount, configsCount, version, keyVersion int) error
+	UpsertAgent(nodeID, label, vaultHash, vaultName, ip string, port, secretsCount, configsCount, version, keyVersion int, salt string) error
 	DeleteAgent(nodeID string) error
 	UpdateAgentState(nodeID string, updates *AgentStateUpdate) error
 	RegisterChild(child *ChildRecord) error
