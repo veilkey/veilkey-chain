@@ -10,16 +10,25 @@ import (
 
 // validTxTypes is the set of all recognised transaction types.
 var validTxTypes = map[TxType]bool{
-	TxSaveTokenRef:        true,
-	TxUpdateTokenRef:      true,
-	TxDeleteTokenRef:      true,
-	TxUpsertAgent:         true,
-	TxRegisterChild:       true,
-	TxIncrementRefVersion: true,
-	TxSaveBinding:         true,
-	TxDeleteBinding:       true,
-	TxSetConfig:           true,
-	TxRecordAuditEvent:    true,
+	TxSaveTokenRef:          true,
+	TxUpdateTokenRef:        true,
+	TxDeleteTokenRef:        true,
+	TxUpsertAgent:           true,
+	TxDeleteAgent:           true,
+	TxUpdateAgentState:      true,
+	TxRegisterChild:         true,
+	TxDeleteChild:           true,
+	TxUpdateChildURL:        true,
+	TxIncrementRefVersion:   true,
+	TxSaveBinding:           true,
+	TxDeleteBinding:         true,
+	TxDeleteBindingsByTarget: true,
+	TxSaveGlobalFunction:    true,
+	TxDeleteGlobalFunction:  true,
+	TxSetConfig:             true,
+	TxDeleteConfig:          true,
+	TxSetParentURL:          true,
+	TxRecordAuditEvent:      true,
 }
 
 // BuildEnvelope creates a TxEnvelope without marshaling to bytes.
